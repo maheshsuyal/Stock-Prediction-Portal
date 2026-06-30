@@ -9,7 +9,7 @@ __pycache__/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-media
+media/
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
@@ -139,6 +139,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+backend-drf/venv311/
 
 # Spyder project settings
 .spyderproject
@@ -176,7 +177,7 @@ cython_debug/
 logs
 **/*.backup.*
 **/*.back.*
-
+frontend-react/dist/
 node_modules
 bower_components
 
@@ -185,5 +186,8 @@ bower_components
 psd
 thumb
 sketch
+
+# vs code
+.vscode/
 
 # End of https://www.toptal.com/developers/gitignore/api/django,react
