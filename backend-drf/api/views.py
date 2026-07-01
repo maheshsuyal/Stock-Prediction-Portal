@@ -116,7 +116,20 @@ class StockPredictionAPIView(APIView):
             y_predicted = scaler.inverse_transform(y_predicted.reshape(-1, 1)).flatten()
             y_test = scaler.inverse_transform(y_test.reshape(-1, 1)).flatten()
             
-            
+            # Remove NaN values
+            mask = ~(np.isnan(y_test) | np.isnan(y_predicted))
+
+            y_test = y_test[mask]
+            y_predicted = y_predicted[mask]
+
+            if len(y_test) == 0:
+                return Response(
+                    {
+                        "status": "error",
+                        "message": "Prediction failed because invalid values were generated."
+                    },
+                    status=400
+                )
             # Current Price
             current_price = float(y_test[-1])
 
@@ -143,17 +156,44 @@ class StockPredictionAPIView(APIView):
 
             # Model Evaluation
             # Mean Squared Error (MSE)
-         
-            mse = mean_squared_error(y_test, y_predicted)
+            
+        # Preparing Test Data
+        past_100_days = data_training.tail(100)
+        final_df = pd.concat([past_100_days, data_testing], ignore_index=True)
 
-            # Root Mean Squared Error (RMSE)
-            rmse = np.sqrt(mse)
+        # Remove NaN values
+        final_df = final_df.ffill().bfill().dropna()
 
-            # R-Squared
-            r2 = r2_score(y_test, y_predicted)
+        input_data = scaler.fit_transform(final_df)
+
+       # Model Evaluation
+        print("NaN in y_test:", np.isnan(y_test).sum())
+        print("NaN in y_predicted:", np.isnan(y_predicted).sum())
+# Check for NaN values
+        mask = ~(np.isnan(y_test) | np.isnan(y_predicted))
+        y_test = y_test[mask]
+        y_predicted = y_predicted[mask]
+
+        if len(y_test) == 0:
+            return Response(
+                {
+                    "status": "error",
+                    "message": "Prediction contains invalid values."
+                },
+                status=400,
+            )
+
+        # Mean Squared Error (MSE)
+        mse = mean_squared_error(y_test, y_predicted)
+
+        # Root Mean Squared Error (RMSE)
+        rmse = np.sqrt(mse)
+
+        # R-Squared
+        r2 = r2_score(y_test, y_predicted)
 
 
-            return Response({
+        return Response({
                 'status': 'success',
                 'plot_img': plot_img,
                 'plot_100_dma': plot_100_dma,
@@ -176,10 +216,10 @@ class StockSearchAPIView(APIView):
         results = []
 
         for company, symbol in INDIAN_STOCKS.items():
-            if query in company:
+            if query in company.lower() or query in symbol.lower():
                 results.append({
-                    "name": company.title(),
-                    "symbol": symbol
-                })
+            "name": company.title(),
+            "symbol": symbol
+            })
 
         return Response(results)
