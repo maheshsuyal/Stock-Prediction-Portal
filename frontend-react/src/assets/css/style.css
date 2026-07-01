@@ -14,3 +14,29 @@ body{
 .container{
     flex: 1;
 }
+
+
+/* ================= Dashboard Card ================= */
+
+.prediction-card{
+    background:#2B3035;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.35);
+    transition:0.3s;
+}
+
+.prediction-card:hover{
+    transform:translateY(-3px);
+}
+
+.search-input{
+    height:55px;
+    border-radius:12px;
+}
+
+.predict-btn{
+    border-radius:12px;
+    font-weight:600;
+    padding:12px 30px;
+}

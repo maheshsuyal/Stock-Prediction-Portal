@@ -110,8 +110,21 @@ class StockPredictionAPIView(APIView):
             # Revert the scaled prices to original price
             y_predicted = scaler.inverse_transform(y_predicted.reshape(-1, 1)).flatten()
             y_test = scaler.inverse_transform(y_test.reshape(-1, 1)).flatten()
+            
+            
+            # Current Price
+            current_price = float(y_test[-1])
 
+            # Predicted Price
+            predicted_price = float(y_predicted[-1])
+
+            # Percentage Change
+            percentage_change = ((predicted_price - current_price) / current_price ) * 100
+            
+            
+            
             # Plot the final prediction
+            
             plt.switch_backend('AGG')
             plt.figure(figsize=(12, 5))
             plt.plot(y_test, 'b', label='Original Price')
@@ -142,7 +155,10 @@ class StockPredictionAPIView(APIView):
                 'plot_prediction': plot_prediction,
                 'mse': mse,
                 'rmse': rmse,
-                'r2': r2
+                'r2': r2,
+                'current_price': round(current_price, 2),
+                'predicted_price': round(predicted_price, 2),
+                'change_percent': round(percentage_change, 2),
                 })
             
             
