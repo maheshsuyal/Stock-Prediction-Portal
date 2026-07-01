@@ -272,7 +272,7 @@ if (value.length < 2) { setSuggestions([]); return; } try { const response=await
 
           </div>
         </div>
-      </>p
+      </>
       )}
     </div>
   </div>
