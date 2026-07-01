@@ -12,10 +12,9 @@ from datetime import datetime
 import os
 from django.conf import settings
 from .utils import save_plot
-from sklearn.preprocessing import MinMaxScaler
 from keras.models import load_model
 from sklearn.metrics import mean_squared_error, r2_score
-
+from sklearn.preprocessing import MinMaxScaler
 
 
 class StockPredictionAPIView(APIView):
@@ -85,11 +84,17 @@ class StockPredictionAPIView(APIView):
             # Splitting data into Training & Testing datasets
             data_training = pd.DataFrame(df.Close[0:int(len(df)*0.7)])
             data_testing = pd.DataFrame(df.Close[int(len(df)*0.7): int(len(df))])
+            
+           
+
+
 
             # Scaling down the data between 0 and 1
+          
             scaler = MinMaxScaler(feature_range=(0,1))
 
             # Load ML Model
+            
             model = load_model('stock_prediction_model.keras')
 
             # Preparing Test Data
@@ -138,6 +143,7 @@ class StockPredictionAPIView(APIView):
 
             # Model Evaluation
             # Mean Squared Error (MSE)
+         
             mse = mean_squared_error(y_test, y_predicted)
 
             # Root Mean Squared Error (RMSE)

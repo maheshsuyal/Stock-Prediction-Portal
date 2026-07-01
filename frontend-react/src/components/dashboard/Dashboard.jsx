@@ -191,21 +191,19 @@ if (value.length < 2) { setSuggestions([]); return; } try { const response=await
         </div>
         <div className="prediction mt-5">
           <div className="p-3">
-            {plot && <img src={plot} style={{ maxWidth: "100%" }} />}
+           {plot && (<img src={plot} style={{ maxWidth: "100%" }} alt="Stock Plot" />)}
           </div>
 
           <div className="p-3">
-            {ma100 && <img src={ma100} style={{ maxWidth: "100%" }} />}
+           <img src={ma100} alt="100 DMA" />
           </div>
 
           <div className="p-3">
-            {ma200 && <img src={ma200} style={{ maxWidth: "100%" }} />}
+            <img src={ma200} alt="200 DMA" />
           </div>
 
           <div className="p-3">
-            {prediction && (
-            <img src={prediction} style={{ maxWidth: "100%" }} />
-            )}
+           {prediction && (<img src={prediction} alt="Prediction" />)}
           </div>
 
           <div className="row mt-4">
