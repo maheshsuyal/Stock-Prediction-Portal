@@ -138,7 +138,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "https://YOUR-NETLIFY-URL.netlify.app",
+    "https://stock-portal-drf.netlify.app",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://stock-portal-drf.netlify.app",
 ]
 
 REST_FRAMEWORK = {
