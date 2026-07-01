@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .stock_mapping import INDIAN_STOCKS
 from rest_framework.views import APIView
 from .serializers import StockPredictionSerializer
 from rest_framework import status
@@ -22,6 +23,17 @@ class StockPredictionAPIView(APIView):
         serializer = StockPredictionSerializer(data=request.data)
         if serializer.is_valid():
             ticker = serializer.validated_data['ticker']
+            ticker = ticker.strip()
+            
+           
+
+           
+            if ticker.lower() in INDIAN_STOCKS:
+                ticker = INDIAN_STOCKS[ticker.lower()]
+
+           
+            elif "." not in ticker and ticker.isalpha():
+                ticker = ticker.upper()
 
             # Fetch the data from yfinance
             now = datetime.now()
@@ -29,8 +41,7 @@ class StockPredictionAPIView(APIView):
             end = now
             df = yf.download(ticker, start, end)
             if df.empty:
-                return Response({"error": "No data found for the given ticker.",
-                                 'status': status.HTTP_404_NOT_FOUND})
+                return Response({ "status": "error","message": f"No stock found for '{serializer.validated_data['ticker']}'. Please enter a valid NSE/BSE or US stock symbol."}, status=404)
             df = df.reset_index()
             # Generate Basic Plot
             plt.switch_backend('AGG')
@@ -133,3 +144,20 @@ class StockPredictionAPIView(APIView):
                 'rmse': rmse,
                 'r2': r2
                 })
+            
+            
+class StockSearchAPIView(APIView):
+
+    def get(self, request):
+        query = request.GET.get("q", "").lower()
+
+        results = []
+
+        for company, symbol in INDIAN_STOCKS.items():
+            if query in company:
+                results.append({
+                    "name": company.title(),
+                    "symbol": symbol
+                })
+
+        return Response(results)
